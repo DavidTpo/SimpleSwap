@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 /**
  * @title TokenB
- * @dev A simple ERC-20 compatible token with minting capability
+ * @dev B simple ERC-20 compatible token with minting capability
  */
 contract TokenB {
     // State variables
