@@ -1,1 +1,72 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
+/**
+ * @title TokenA
+ * @dev A simple ERC-20 compatible token with minting capability
+ */
+contract TokenA {
+    // State variables
+    string public constant name = "Token A"; // Token name
+    string public constant symbol = "TKNA"; // Token symbol
+    uint8 public constant decimals = 18; // Token decimals (standard ERC-20)
+    uint256 public totalSupply; // Total token supply
+    
+    // Balances mapping (address => amount)
+    mapping(address => uint256) public balanceOf;
+    
+    // Allowances mapping (owner => (spender => amount))
+    mapping(address => mapping(address => uint256)) public allowance;
+
+    /**
+     * @dev Constructor - Mints initial supply to deployer
+     * Initial supply: 1,000,000 tokens (with 18 decimals)
+     */
+    constructor() {
+        uint256 initialSupply = 1000000 * 10 ** decimals;
+        balanceOf[msg.sender] = initialSupply; // Mint to deployer
+        totalSupply = initialSupply; // Set total supply
+    }
+
+    /**
+     * @dev Approves another address to spend tokens
+     * @param spender Address allowed to spend
+     * @param amount Amount allowed to spend (in wei)
+     * @return success Transaction status
+     */
+    function approve(address spender, uint256 amount) public returns (bool success) {
+        allowance[msg.sender][spender] = amount;
+        return true;
+    }
+
+    /**
+     * @dev Transfers tokens to another address
+     * @param to Recipient address
+     * @param amount Amount to transfer (in wei)
+     * @return success Transaction status
+     */
+    function transfer(address to, uint256 amount) public returns (bool success) {
+        require(balanceOf[msg.sender] >= amount, "Insufficient balance");
+        balanceOf[msg.sender] -= amount;
+        balanceOf[to] += amount;
+        return true;
+    }
+
+    /**
+     * @dev Transfers tokens from one address to another (requires approval)
+     * @param from Sender address
+     * @param to Recipient address
+     * @param amount Amount to transfer (in wei)
+     * @return success Transaction status
+     */
+    function transferFrom(address from, address to, uint256 amount) public returns (bool success) {
+        require(allowance[from][msg.sender] >= amount, "Allowance exceeded");
+        require(balanceOf[from] >= amount, "Insufficient balance");
+        
+        allowance[from][msg.sender] -= amount;
+        balanceOf[from] -= amount;
+        balanceOf[to] += amount;
+        
+        return true;
+    }
+}
