@@ -1,6 +1,6 @@
 # SimpleSwap DEX Implementation
 
-[![Solidity Version](https://img.shields.io/badge/Solidity-^0.8.0-blue)](https://soliditylang.org)
+[![Solidity Version](https://img.shields.io/badge/Solidity-^0.8.30-blue)](https://soliditylang.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Introduction
