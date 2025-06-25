@@ -23,5 +23,96 @@ struct Pair {
     uint256 reserveA;       // Token A reserves
     uint256 reserveB;       // Token B reserves
     uint256 totalLiquidity; // Total LP tokens minted
-    mapping(address => uint256) liquidity; // LP balances
-}# SimpleSwap
+
+
+2. Mappings
+pairs: Stores all token pairs using a hash of sorted addresses
+
+State Variables
+Variable	Type	Description
+pairs	mapping	All registered token pairs
+Core Functionality
+1. Liquidity Provision
+addLiquidity()
+Creates or updates a token pair pool
+
+Mints LP tokens proportional to deposit amounts
+
+Enforces minimum deposit requirements
+
+Emits LiquidityAdded event
+
+removeLiquidity()
+Burns LP tokens and returns proportional assets
+
+Verifies minimum output amounts
+
+Emits LiquidityRemoved event
+
+2. Token Swaps
+swapExactTokensForTokens()
+Executes trades using constant product formula (x*y=k)
+
+Applies 0.3% swap fee
+
+Requires minimum output amount
+
+Emits TokensSwapped event
+
+3. Price Calculations
+getPrice()
+Returns price ratio between tokens (TokenA/TokenB)
+
+Calculated as (reserveB * 1e18) / reserveA
+
+getAmountOut()
+Computes output amount using:
+
+solidity
+amountOut = (amountIn * 997 * reserveOut) / 
+            (reserveIn * 1000 + amountIn * 997)
+Key Mechanisms
+1. Constant Product Market Maker
+Maintains invariant: reserveA * reserveB = k
+
+Prices adjust automatically based on pool ratios
+
+2. Liquidity Calculations
+Initial liquidity: sqrt(amountA * amountB)
+
+Subsequent deposits: Min of proportional shares
+
+3. Security Features
+Deadline enforcement for transactions
+
+Reentrancy protection via CEI pattern
+
+Input validation for all parameters
+
+Workflow
+Pool Creation
+User deploys two ERC-20 tokens (TokenA/TokenB)
+
+Calls addLiquidity() with initial deposits
+
+Receives LP tokens representing share
+
+Token Swap
+User approves token spending
+
+Calls swapExactTokensForTokens()
+
+Receives output tokens minus fee
+
+Liquidity Removal
+User approves LP token spending
+
+Calls removeLiquidity()
+
+Receives underlying tokens
+
+Events
+Event	Description
+LiquidityAdded	Logs new liquidity provision
+LiquidityRemoved	Records liquidity withdrawal
+TokensSwapped	Tracks completed swaps
